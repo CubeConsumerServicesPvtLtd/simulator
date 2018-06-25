@@ -1,13 +1,12 @@
 from setuptools import setup
 
 setup(
-    name='simulator',
+    name='cube-simulator',
     version='1.0',
-    scripts=['simulator'],
     install_requires=['python-dateutil'],
     author="Shashank Singh",
-    author_email="shashank#bankoncube.com",
-    description="A small example package",
+    author_email="shashank.s.1903@gmail.com",
+    description="A money flow simuator",
     url='http://github.com/CubeConsumerServivesPvtLtd/simulator',
     license='MIT',
     packages=['simulator'],
