@@ -1,1 +1,4 @@
-.idea
+*.idea
+/dist/
+/*.egg-info
+/*.eggs
