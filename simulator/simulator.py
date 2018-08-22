@@ -3,7 +3,6 @@ __author__ = 'SHASHANK'
 from datetime import datetime as dt
 from .date_utils import DateUtils
 from .flows import *
-import sys
 import json
 
 
@@ -51,29 +50,68 @@ def show_result(event_list):
         print("\n-----MF----TATS-----\n")
         print(json.dumps(event_list.__get_mf__()))
 
+
+def getdate(mode, transaction_date, scheme_id, gateway=0):
+
+    if gateway:
+        if mode == 1:
+            # date_str = (transaction_date + timedelta(days=3, hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            datee = (transaction_date + timedelta(hours=5, minutes=30))
+            dateutils = setup(datee.strftime("%Y-%m-%d %H:%M:%S"))
+
+            if datee < datee.replace(hour=int(11), minute=int(30), second=int(0)):
+                debit_confirmation_date = dateutils.get_next_bank_working_day(2)
+            else:
+                debit_confirmation_date = dateutils.get_next_bank_working_day(3)
+
+            date_str = debit_confirmation_date.strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "1000")[0]
+            try:
+                return order_dates[scheme_id]['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+            except Exception as e:
+                return order_dates['Default']['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+
+        if mode == 2:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0010")[0]
+            return order_dates['neft']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 3:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0100")[0]
+            return order_dates['bill']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 4:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0001")[0]
+            return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+    else:
+        if mode == 1:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "1000")[0]
+            try:
+                return order_dates[scheme_id]['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+            except Exception as e:
+                return order_dates['Default']['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+
+        if mode == 2:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0010")[0]
+            return order_dates['neft']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 3:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0100")[0]
+            return order_dates['bill']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 4:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0001")[0]
+            return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+
+
 if __name__ == "__main__":
-    main(sys.argv[1] + " " + sys.argv[2], sys.argv[3])
-
-
-def get(mode, transaction_date, scheme_id):
-
-    if mode == 1:
-        date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
-        event_list, order_dates = main(date_str, "1000")[0]
-        return order_dates[scheme_id]['update_in_app_date'] - timedelta(hours=5, minutes=30)
-
-    if mode == 2:
-        date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
-        event_list, order_dates = main(date_str, "0010")[0]
-        return order_dates['neft']['update_in_app_date'] - timedelta(hours=5, minutes=30)
-
-    if mode == 3:
-        date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
-        event_list, order_dates = main(date_str, "0100")[0]
-        return order_dates['bill']['update_in_app_date'] - timedelta(hours=5, minutes=30)
-
-    if mode == 4:
-        date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
-        event_list, order_dates = main(date_str, "0001")[0]
-        return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
-
+    # main(sys.argv[1] + " " + sys.argv[2], sys.argv[3])
+    getdate(1,dt.now(),8,0)

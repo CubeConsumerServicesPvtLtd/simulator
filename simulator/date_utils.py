@@ -22,6 +22,9 @@ class DateUtils:
         self.init_date_index_bank = -1
         counter = 0
 
+        if transation_date < datetime.strptime("2018-01-01", "%Y-%m-%d") < datetime.strptime("2019-01-01", "%Y-%m-%d"):
+            raise ValueError("Transaction Date is out of 1 year window")
+
         while True:
             for i in self.daterules_bank._iter():
                 if counter == 366:
@@ -47,6 +50,9 @@ class DateUtils:
         self.daterules_bse = rsb
         self.init_date_index_bse = -1
         counter = 0
+
+        if transation_date < datetime.strptime("2018-01-01", "%Y-%m-%d") < datetime.strptime("2019-01-01", "%Y-%m-%d"):
+            raise ValueError("Transaction Date is out of 1 year window")
 
         while True:
             for i in self.daterules_bse._iter():
