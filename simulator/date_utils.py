@@ -78,3 +78,13 @@ class DateUtils:
     def get_next_bse_working_day(self, days=1):
         (hour, min, sec) = self.init_date.strftime("%H:%m:%S").split(':')
         return self.daterules_bse[self.init_date_index_bse + days].replace(hour=int(hour), minute=int(min), second=int(sec))
+
+    def get_next_date_for_nach_file(self):
+        (hour, min, sec) = self.init_date.strftime("%H:%m:%S").split(':')
+        if self.init_date.date() == self.get_next_bse_working_day(0).date():
+            if self.init_date < self.init_date.replace(hour=int(11), minute=int(30), second=int(0)):
+                return self.get_next_bse_working_day(3)
+            else:
+                return self.get_next_bse_working_day(4)
+        else:
+            return self.get_next_bse_working_day(4)

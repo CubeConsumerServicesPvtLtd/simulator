@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='cube-simulator',
-    version='1.0.10',
+    version='1.1.3',
     install_requires=['python-dateutil'],
     author="Shashank Singh",
     author_email="shashank.s.1903@gmail.com",

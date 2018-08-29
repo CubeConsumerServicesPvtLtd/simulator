@@ -37,7 +37,7 @@ def main(transaction_datetime, basket_items):
     if int(rnd[2]):
         result.append(execute_cube_current_account_flow(next_date, dateutil))
     if int(rnd[3]):
-        result.append(execute_cube_current_account_flow(next_date, dateutil))
+        result.append(execute_mf_redemption_flow(next_date, dateutil))
 
     return result
 
@@ -53,18 +53,42 @@ def show_result(event_list):
 
 def getdate(mode, transaction_date, scheme_id, gateway=0):
 
-    if gateway:
+    #    Nach Transation
+
+    if gateway == 2:
+
+        datee = (transaction_date + timedelta(hours=5, minutes=30))
+        dateutils = setup(datee.strftime("%Y-%m-%d %H:%M:%S"))
+        debit_date = dateutils.get_next_date_for_nach_file()
+        date_str = debit_date.strftime("%Y-%m-%d %H:%M:%S")
+        print(date_str)
         if mode == 1:
-            # date_str = (transaction_date + timedelta(days=3, hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
-            datee = (transaction_date + timedelta(hours=5, minutes=30))
-            dateutils = setup(datee.strftime("%Y-%m-%d %H:%M:%S"))
+            event_list, order_dates = main(date_str, "1000")[0]
+            try:
+                return order_dates[scheme_id]['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+            except Exception as e:
+                return order_dates['Default']['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
 
-            if datee < datee.replace(hour=int(11), minute=int(30), second=int(0)):
-                debit_confirmation_date = dateutils.get_next_bank_working_day(2)
-            else:
-                debit_confirmation_date = dateutils.get_next_bank_working_day(3)
+        if mode == 2:
+            event_list, order_dates = main(date_str, "0010")[0]
+            return order_dates['neft']['update_in_app_date'] - timedelta(hours=5, minutes=30)
 
-            date_str = debit_confirmation_date.strftime("%Y-%m-%d %H:%M:%S")
+        if mode == 3:
+            event_list, order_dates = main(date_str, "0100")[0]
+            return order_dates['bill']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 4:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0001")[0]
+            return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 5:
+            return debit_date - timedelta(hours=5, minutes=30)
+
+    #   BD Pg Transation
+    elif gateway == 0:
+        if mode == 1:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
             event_list, order_dates = main(date_str, "1000")[0]
             try:
                 return order_dates[scheme_id]['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
@@ -86,6 +110,38 @@ def getdate(mode, transaction_date, scheme_id, gateway=0):
             event_list, order_dates = main(date_str, "0001")[0]
             return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
 
+        if mode == 5:
+            return transaction_date - timedelta(hours=5, minutes=30)
+
+    #   WA Transation
+    elif gateway == 4:
+        if mode == 1:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "1000")[0]
+            try:
+                return order_dates[scheme_id]['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+            except Exception as e:
+                return order_dates['Default']['update_in_app_date'] - timedelta(hours=5, minutes=30, seconds=0)
+
+        if mode == 2:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0010")[0]
+            return order_dates['neft']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 3:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0100")[0]
+            return order_dates['bill']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 4:
+            date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
+            event_list, order_dates = main(date_str, "0001")[0]
+            return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
+
+        if mode == 5:
+            return transaction_date - timedelta(hours=5, minutes=30)
+
+    #   Withdrawls
     else:
         if mode == 1:
             date_str = (transaction_date + timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d %H:%M:%S")
@@ -110,8 +166,13 @@ def getdate(mode, transaction_date, scheme_id, gateway=0):
             event_list, order_dates = main(date_str, "0001")[0]
             return order_dates['mfr']['update_in_app_date'] - timedelta(hours=5, minutes=30)
 
+        if mode == 5:
+            return transaction_date - timedelta(hours=5, minutes=30)
 
 
 if __name__ == "__main__":
     # main(sys.argv[1] + " " + sys.argv[2], sys.argv[3])
-    getdate(1,dt.now(),8,0)
+
+    from dateutil.parser import parse
+    date = parse("2018-08-21 11:30:29")
+    getdate(1, date, 8, 2)
