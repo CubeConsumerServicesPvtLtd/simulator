@@ -14,7 +14,7 @@ class DateUtils:
         # setting up bank calender#
         r = rrule.rrule(rrule.YEARLY,
                         byweekday=[rrule.MO, rrule.TU, rrule.WE, rrule.TH, rrule.FR, rrule.SA],
-                        dtstart=datetime.strptime("2018-01-01", "%Y-%m-%d"))
+                        dtstart=datetime.strptime("2019-01-01", "%Y-%m-%d"))
         rs = rrule.rruleset()
         [rs.exdate(datetime.strptime(HOLIDAY, "%Y-%m-%d")) for HOLIDAY in BANK_HOLIDAYS]
         rs.rrule(r)
@@ -22,7 +22,7 @@ class DateUtils:
         self.init_date_index_bank = -1
         counter = 0
 
-        if transation_date < datetime.strptime("2018-01-01", "%Y-%m-%d") < datetime.strptime("2019-01-01", "%Y-%m-%d"):
+        if transation_date < datetime.strptime("2019-01-01", "%Y-%m-%d") < datetime.strptime("2020-01-01", "%Y-%m-%d"):
             raise ValueError("Transaction Date is out of 1 year window")
 
         while True:
@@ -43,7 +43,7 @@ class DateUtils:
         transation_date = self.init_date
         rb = rrule.rrule(rrule.YEARLY,
                          byweekday=[rrule.MO, rrule.TU, rrule.WE, rrule.TH, rrule.FR],
-                         dtstart=datetime.strptime("2018-01-01", "%Y-%m-%d"))
+                         dtstart=datetime.strptime("2019-01-01", "%Y-%m-%d"))
         rsb = rrule.rruleset()
         [rsb.exdate(datetime.strptime(HOLIDAY, "%Y-%m-%d")) for HOLIDAY in BSE_HOLIDAYS]
         rsb.rrule(rb)
@@ -51,7 +51,7 @@ class DateUtils:
         self.init_date_index_bse = -1
         counter = 0
 
-        if transation_date < datetime.strptime("2018-01-01", "%Y-%m-%d") < datetime.strptime("2019-01-01", "%Y-%m-%d"):
+        if transation_date < datetime.strptime("2019-01-01", "%Y-%m-%d") < datetime.strptime("2020-01-01", "%Y-%m-%d"):
             raise ValueError("Transaction Date is out of 1 year window")
 
         while True:
@@ -82,7 +82,7 @@ class DateUtils:
     def get_next_date_for_nach_file(self):
         (hour, min, sec) = self.init_date.strftime("%H:%m:%S").split(':')
         if self.init_date.date() == self.get_next_bse_working_day(0).date():
-            if self.init_date < self.init_date.replace(hour=int(11), minute=int(30), second=int(0)):
+            if self.init_date < self.init_date.replace(hour=int(15), minute=int(30), second=int(0)):
                 return self.get_next_bse_working_day(3)
             else:
                 return self.get_next_bse_working_day(4)
