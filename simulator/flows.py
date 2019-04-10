@@ -94,7 +94,7 @@ def execute_mf_redemption_flow(date, dateutils, scheme):
             credit_days = key
             break
 
-    if order_placed_date <= trans_date.replace(hour=9, minute=30, second=0):
+    if order_placed_date <= trans_date.replace(hour=15, minute=0, second=00):
         order_dates_list = {
             'mfr': {
                 'order_placed_date': trans_date,
@@ -139,7 +139,7 @@ def execute_p2p_withdraw_flow(date, dateutils):
     trans_date = dateutils.get_current_day()
     order_placed_date = trans_date
 
-    if order_placed_date <= trans_date.replace(hour=9, minute=30, second=0):
+    if order_placed_date <= trans_date.replace(hour=15, minute=0, second=0):
         order_dates_list = {
             'p2plending': {
                 'order_placed_date': trans_date,
