@@ -146,11 +146,11 @@ def calculate_date_for_0(partner_credit_date):
 
 def calculate_date_for_1(calender, partner_credit_date, status, lastupdatets, scheme_id):
 
-    if status in [2, 8]:
+    if status in ['2', '8']:
         order_date = lastupdatets
 
     else:
-        if status == 9:
+        if status == '9':
             order_date = lastupdatets
         else:
             order_date = partner_credit_date
@@ -167,13 +167,13 @@ def calculate_date_for_1(calender, partner_credit_date, status, lastupdatets, sc
 
 def calculate_date_for_1_bank(calender, t_date, status, lastupdatets, scheme_id):
 
-    if status in [5, 2]:
+    if status in ['5', '2']:
         order_date = lastupdatets
         if lastupdatets.hour >= 15:
             order_date = calender.get_next_date(t_date)
 
     else:
-        if status == 9:
+        if status == '9':
             order_date = lastupdatets
         else:
             if t_date.hour >= 15:

@@ -46,10 +46,10 @@ def get(trans_id):
         with closing(cnx.cursor()) as cursor:
             try:
                 cursor.execute(""" select t.processor, t.toacc, o.status, ADDTIME(o.lastupdatets, "5:30"), h.id, h.status,
-                                   h.gw, ADDTIME(t.createts, "5:30") from orchestrator.tlog_trans t, orchestrator.tlog_transorder o,
+                                   h.gw, ADDTIME(t.createts, "5:30"), fromacc from orchestrator.tlog_trans t, orchestrator.tlog_transorder o,
                                    orchestrator.tlog_transgw g, orchestrator.tlog_transgwheader h where t.id=o.trans_id
                                    and t.id=g.trans_id and g.transgwheader_id= h.id and t.id=%s""" % trans_id)
-                (processor, toacc, status, lastupdatets, payment_id, payment_status, gateway, t_date) = cursor.fetchone()
+                (processor, toacc, status, lastupdatets, payment_id, payment_status, gateway, t_date, fromacc) = cursor.fetchone()
 
                 if t_date < datetime.strptime("2020-01-01", "%Y-%m-%d") < datetime.strptime("2021-01-01", "%Y-%m-%d"):
                     raise ValueError("Transaction Date is out of 1 year window")
@@ -57,17 +57,15 @@ def get(trans_id):
                 if payment_status == 3:
                     cursor.execute(""" select ADDTIME(createts, "5:30") from orchestrator.tlog_transgwheaderlog where transgwheader_id=%s
                                        and status=3 order by createts desc limit 1""" % payment_id)
-                    t_date = payment_confirmation_date = cursor.fetchone()
+                    t_date = payment_confirmation_date = cursor.fetchone()[0]
 
                     if processor == 1 and toacc != "bank":
                         payment_credit_date = calender.get_next_date(payment_confirmation_date, orientation=0)
-                    else:
-                        payment_credit_date = calender.get_next_date(payment_confirmation_date)
                 else:
                     if gateway in [0, 1, 3, 4, 6]:
-                        t_date = payment_confirmation_date = payment_credit_date = calender.get_next_date(t_date, orientation=0)
+                        t_date = payment_confirmation_date = calender.get_next_date(t_date, orientation=0)
                     elif gateway == 2:
-                        t_date = payment_confirmation_date = payment_credit_date = calender.get_next_date(t_date, 3 if t_date.hour < 15 else 4)
+                        t_date = payment_confirmation_date = calender.get_next_date(t_date, 3 if t_date.hour < 15 else 4)
 
 
                 if processor == 0:
@@ -75,8 +73,8 @@ def get(trans_id):
 
                 elif processor == 1:
                     cursor.execute(""" select s.code from mutual_fund.cube_account a, mutual_fund.scheme s
-                                       where a.scheme_id=s.id and a.id = %s""" % toacc)
-                    scheme_id = cursor.fetchone()
+                                       where a.scheme_id=s.id and a.id = %s""" % (toacc if toacc != "bank" else fromacc))
+                    scheme_id = cursor.fetchone()[0]
 
                     if toacc not in ["bank"]:
                         final_date = flows.calculate_date_for_1(calender, payment_credit_date, status, lastupdatets, scheme_id)
@@ -124,8 +122,14 @@ def get(trans_id):
 
                 else:
                     raise ValueError("Processor Not Implemented!!")
-
                 return final_date.replace(hour=0, minute=0, second=0)
             except Exception as e:
                 print(e)
                 traceback.print_exc(file=sys.stdout)
+
+# if __name__ == '__main__':
+#     print(get(12961), getdate(1, datetime(2020,5,26,17,46,24), 'RELLFTPI-GR', 3, 'bank'))
+#     print(get(12963), getdate(1, datetime(2020,5,26,17,46,24), 'RELLFTPI-GR', 0, ''))
+#     print(get(13051), getdate(9, datetime(2020,1,17,5,47,47), 'RELLFTPI-GR', 0, ''))
+
+

@@ -11,7 +11,7 @@ class DateUtils:
         rs = rrule.rruleset()
         [rs.exdate(datetime.strptime(HOLIDAY, "%Y-%m-%d")) for HOLIDAY in HOLIDAYS]
 
-        r = rrule.rrule(rrule.YEARLY, count=366, byweekday=[rrule.MO, rrule.TU, rrule.WE, rrule.TH, rrule.FR], dtstart=datetime.strptime("2019-01-01", "%Y-%m-%d"))
+        r = rrule.rrule(rrule.YEARLY, count=366, byweekday=[rrule.MO, rrule.TU, rrule.WE, rrule.TH, rrule.FR], dtstart=datetime.strptime("2020-01-01", "%Y-%m-%d"))
         rs.rrule(r)
 
         self.working_day_list = list(rs._iter())
