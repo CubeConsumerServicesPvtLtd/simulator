@@ -1,14 +1,14 @@
 __author__ = 'SHASHANK'
 
 from datetime import datetime, timedelta
-from .date_utils import DateUtils
-from .constants import setting
+from date_utils import DateUtils
+from constants import setting
 from contextlib import closing
 
 import sys
 import traceback
 import mysql.connector.pooling
-import simulator.flows as flows
+import flows as flows
 
 calender = DateUtils()
 

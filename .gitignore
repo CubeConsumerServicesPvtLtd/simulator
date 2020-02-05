@@ -108,3 +108,5 @@ ENV/
 
 # pycharm settings
 .idea/
+
+constants.py
