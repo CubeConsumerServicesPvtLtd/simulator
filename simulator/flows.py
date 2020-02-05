@@ -1,5 +1,5 @@
 __author__ = 'SHASHANK'
-from constants import allotment_tat, redemption_tat
+from .constants import allotment_tat, redemption_tat
 from datetime import timedelta
 
 

@@ -1,8 +1,8 @@
 __author__ = 'SHASHANK'
 
 from datetime import datetime, timedelta
-from date_utils import DateUtils
-from constants import setting
+from .date_utils import DateUtils
+from .constants import setting
 from contextlib import closing
 
 import sys
