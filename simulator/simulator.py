@@ -37,7 +37,7 @@ def getdate(mode, t_date, scheme_id, gateway=0, toacc=""):
 
     try:
         # final_date, _ = getattr(self, func)(t_date, partner_credit_date, calender, scheme_id)
-        final_date = eval(func)(t_date, partner_credit_date, calender, scheme_id)
+        final_date, _ = eval(func)(t_date, partner_credit_date, calender, scheme_id)
         return final_date.replace(hour=0, minute=0, second=0)
     except AttributeError as e:
         print(e)
