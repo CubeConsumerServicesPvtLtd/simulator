@@ -1,9 +1,8 @@
 __author__ = 'SHASHANK'
 
-from dateutil.parser import parse
 from datetime import datetime
 from dateutil import rrule
-from .constants import SCHEME_HOLIDAYS, HOLIDAYS
+from constants import SCHEME_HOLIDAYS, HOLIDAYS
 
 
 class DateUtils:
