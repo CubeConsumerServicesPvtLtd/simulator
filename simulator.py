@@ -48,7 +48,7 @@ def get(trans_id):
                 cursor.execute(""" select t.processor, t.toacc, o.status, ADDTIME(o.lastupdatets, "5:30"), h.id, h.status,
                                    h.gw, ADDTIME(t.createts, "5:30") from orchestrator.tlog_trans t, orchestrator.tlog_transorder o,
                                    orchestrator.tlog_transgw g, orchestrator.tlog_transgwheader h where t.id=o.trans_id
-                                   and t.id=g.trans_id and g.transgwheader_id= h.id and t.id=%s""", trans_id)
+                                   and t.id=g.trans_id and g.transgwheader_id= h.id and t.id=%s""" % trans_id)
                 (processor, toacc, status, lastupdatets, payment_id, payment_status, gateway, t_date) = cursor.fetchone()
 
                 if t_date < datetime.strptime("2020-01-01", "%Y-%m-%d") < datetime.strptime("2021-01-01", "%Y-%m-%d"):
@@ -56,7 +56,7 @@ def get(trans_id):
 
                 if payment_status == 3:
                     cursor.execute(""" select ADDTIME(createts, "5:30") from orchestrator.tlog_transgwheaderlog where transgwheader_id=%s
-                                       and status=3 order by createts desc limit 1""", payment_id)
+                                       and status=3 order by createts desc limit 1""" % payment_id)
                     t_date = payment_confirmation_date = cursor.fetchone()
 
                     if processor == 1 and toacc != "bank":
@@ -75,7 +75,7 @@ def get(trans_id):
 
                 elif processor == 1:
                     cursor.execute(""" select s.code from mutual_fund.cube_account a, mutual_fund.scheme s
-                                       where a.scheme_id=s.id and a.id = %s""", toacc)
+                                       where a.scheme_id=s.id and a.id = %s""" % toacc)
                     scheme_id = cursor.fetchone()
 
                     if toacc not in ["bank"]:
