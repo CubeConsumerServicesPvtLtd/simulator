@@ -39,7 +39,9 @@ def getdate(mode, t_date, scheme_id, gateway=0, toacc=""):
         # final_date, _ = getattr(self, func)(t_date, partner_credit_date, calender, scheme_id)
         final_date = eval(func)(t_date, partner_credit_date, calender, scheme_id)
         return final_date.replace(hour=0, minute=0, second=0)
-    except AttributeError:
+    except AttributeError as e:
+        print(e)
+        traceback.print_exc(file=sys.stdout)
         raise ValueError("Processor Not Implemented")
 
 
@@ -71,7 +73,7 @@ def get(trans_id):
 
 
                 if processor == 0:
-                    final_date = flows.calculate_date_for_0(payment_confirmation_date)
+                    final_date = calculate_date_for_0(payment_confirmation_date)
 
                 elif processor == 1:
                     cursor.execute(""" select s.code from mutual_fund.cube_account a, mutual_fund.scheme s
@@ -79,48 +81,48 @@ def get(trans_id):
                     scheme_id = cursor.fetchone()[0]
 
                     if toacc not in ["bank"]:
-                        final_date = flows.calculate_date_for_1(calender, payment_credit_date, status, lastupdatets, scheme_id)
+                        final_date = calculate_date_for_1(calender, payment_credit_date, status, lastupdatets, scheme_id)
                     else:
-                        final_date = flows.calculate_date_for_1_bank(calender, t_date, status, lastupdatets, scheme_id)
+                        final_date = calculate_date_for_1_bank(calender, t_date, status, lastupdatets, scheme_id)
 
                 elif processor == 2:
-                    final_date = flows.calculate_date_for_2(calender, payment_confirmation_date)
+                    final_date = calculate_date_for_2(calender, payment_confirmation_date)
 
                 elif processor == 3:
-                    final_date = flows.calculate_date_for_3(payment_confirmation_date)
+                    final_date = calculate_date_for_3(payment_confirmation_date)
 
                 elif processor == 4:
                     if toacc not in ["bank"]:
-                        final_date = flows.calculate_date_for_4(calender, payment_confirmation_date)
+                        final_date = calculate_date_for_4(calender, payment_confirmation_date)
                     else:
-                        final_date = flows.calculate_date_for_4_bank(calender, t_date)
+                        final_date = calculate_date_for_4_bank(calender, t_date)
 
                 elif processor == 5:
-                    final_date = flows.calculate_date_for_5(payment_confirmation_date)
+                    final_date = calculate_date_for_5(payment_confirmation_date)
 
                 elif processor == 6:
                     if toacc not in ["bank"]:
-                        final_date = flows.calculate_date_for_6(payment_confirmation_date)
+                        final_date = calculate_date_for_6(payment_confirmation_date)
                     else:
-                        final_date = flows.calculate_date_for_6_bank(calender, t_date)
+                        final_date = calculate_date_for_6_bank(calender, t_date)
 
                 elif processor == 7:
-                    final_date = flows.calculate_date_for_7(payment_confirmation_date)
+                    final_date = calculate_date_for_7(payment_confirmation_date)
 
                 elif processor == 8:
                     if toacc not in ["bank"]:
-                        final_date = flows.calculate_date_for_8(calender, payment_confirmation_date)
+                        final_date = calculate_date_for_8(calender, payment_confirmation_date)
                     else:
-                        final_date = flows.calculate_date_for_8_bank(calender, t_date)
+                        final_date = calculate_date_for_8_bank(calender, t_date)
 
                 elif processor == 9:
                     if toacc not in ["bank"]:
-                        final_date = flows.calculate_date_for_9(calender, payment_confirmation_date)
+                        final_date = calculate_date_for_9(calender, payment_confirmation_date)
                     else:
-                        final_date = flows.calculate_date_for_9_bank(calender, t_date)
+                        final_date = calculate_date_for_9_bank(calender, t_date)
 
                 elif processor == 10:
-                    final_date = flows.calculate_date_for_10(payment_confirmation_date)
+                    final_date = calculate_date_for_10(payment_confirmation_date)
 
                 else:
                     raise ValueError("Processor Not Implemented!!")
