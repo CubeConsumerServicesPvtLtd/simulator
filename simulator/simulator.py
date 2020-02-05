@@ -10,7 +10,6 @@ from contextlib import closing
 import sys
 import traceback
 import mysql.connector.pooling
-# import flows as flows
 
 calender = DateUtils()
 
@@ -37,7 +36,8 @@ def getdate(mode, t_date, scheme_id, gateway=0, toacc=""):
     func = "flow_" + str(mode) + "_" + "bank" if toacc == "bank" else "flow_" + str(mode) + "_"
 
     try:
-        final_date, _ = getattr(flows, func)(t_date, partner_credit_date, calender, scheme_id)
+        # final_date, _ = getattr(self, func)(t_date, partner_credit_date, calender, scheme_id)
+        final_date = eval(func)(t_date, partner_credit_date, calender, scheme_id)
         return final_date.replace(hour=0, minute=0, second=0)
     except AttributeError:
         raise ValueError("Processor Not Implemented")
