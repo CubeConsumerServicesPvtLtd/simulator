@@ -67,9 +67,9 @@ def get(trans_id):
                         payment_credit_date = calender.get_next_date(payment_confirmation_date, orientation=0)
                 else:
                     if gateway in [0, 1, 3, 4, 6]:
-                        t_date = payment_confirmation_date = calender.get_next_date(t_date, orientation=0)
+                        payment_credit_date = t_date = payment_confirmation_date = calender.get_next_date(t_date, orientation=0)
                     elif gateway == 2:
-                        t_date = payment_confirmation_date = calender.get_next_date(t_date, 3 if t_date.hour < 15 else 4)
+                        payment_credit_date = t_date = payment_confirmation_date = calender.get_next_date(t_date, 3 if t_date.hour < 15 else 4)
 
 
                 if processor == 0:
