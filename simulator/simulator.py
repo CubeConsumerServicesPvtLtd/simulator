@@ -102,9 +102,9 @@ def get(trans_id):
 
                 elif processor == 6:
                     if toacc not in ["bank"]:
-                        final_date = calculate_date_for_6(payment_confirmation_date)
+                        final_date = calculate_date_for_6(calender, payment_confirmation_date, status, lastupdatets)
                     else:
-                        final_date = calculate_date_for_6_bank(calender, t_date)
+                        final_date = calculate_date_for_6_bank(calender, t_date, status, lastupdatets)
 
                 elif processor == 7:
                     final_date = calculate_date_for_7(payment_confirmation_date)
@@ -117,9 +117,9 @@ def get(trans_id):
 
                 elif processor == 9:
                     if toacc not in ["bank"]:
-                        final_date = calculate_date_for_9(calender, payment_confirmation_date)
+                        final_date = calculate_date_for_9(calender, payment_confirmation_date, status, lastupdatets)
                     else:
-                        final_date = calculate_date_for_9_bank(calender, t_date)
+                        final_date = calculate_date_for_9_bank(calender, t_date, status, lastupdatets)
 
                 elif processor == 10:
                     final_date = calculate_date_for_10(payment_confirmation_date)

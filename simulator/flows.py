@@ -214,15 +214,25 @@ def calculate_date_for_4_bank(calender, t_date):
 def calculate_date_for_5(partner_credit_date):
     return partner_credit_date
 
-def calculate_date_for_6(partner_credit_date):
-    return partner_credit_date + timedelta(days=5)
-
-
-def calculate_date_for_6_bank(calender, t_date):
-    if t_date.hour >= 15:
-        order_date = calender.get_next_date(t_date)
+def calculate_date_for_6(calender, partner_credit_date, status, lastupdatets):
+    if status == 2:
+        order_date = calender.get_next_date(lastupdatets, 0)
     else:
-        order_date = calender.get_next_date(t_date, 0)
+        order_date = partner_credit_date
+    return order_date + timedelta(days=5)
+
+
+def calculate_date_for_6_bank(calender, t_date, status, lastupdatets):
+    if status == 2:
+        if lastupdatets.hour >= 15:
+            order_date = calender.get_next_date(t_date)
+        else:
+            order_date = calender.get_next_date(t_date, 0)
+    else:
+        if t_date.hour >= 15:
+            order_date = calender.get_next_date(t_date)
+        else:
+            order_date = calender.get_next_date(t_date, 0)
     return calender.get_next_date(order_date, 3)
 
 
@@ -242,12 +252,20 @@ def calculate_date_for_8_bank(calender, t_date):
     return calender.get_next_date(order_date, 3)
 
 
-def calculate_date_for_9(calender, partner_credit_date):
-    return calender.get_next_date(partner_credit_date, 2)
+def calculate_date_for_9(calender, partner_credit_date, status, lastupdatets):
+    if status == 2:
+        order_date = calender.get_next_date(lastupdatets, 0)
+    else:
+        order_date = partner_credit_date
+    return calender.get_next_date(order_date, 2)
 
 
-def calculate_date_for_9_bank(calender, t_date):
-    return calender.get_next_date(t_date, 2)
+def calculate_date_for_9_bank(calender, t_date, status, lastupdatets):
+    if status == 2:
+        order_date = calender.get_next_date(lastupdatets, 0)
+    else:
+        order_date = t_date
+    return calender.get_next_date(order_date, 2)
 
 
 def calculate_date_for_10(partner_credit_date):
