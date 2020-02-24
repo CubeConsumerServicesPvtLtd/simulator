@@ -55,6 +55,8 @@ def get(trans_id):
                                    and t.id=g.trans_id and g.transgwheader_id= h.id and t.id=%s""" % trans_id)
                 (processor, toacc, status, lastupdatets, payment_id, payment_status, gateway, t_date, fromacc) = cursor.fetchone()
 
+                status = int(status)
+
                 if t_date < datetime.strptime("2020-01-01", "%Y-%m-%d") < datetime.strptime("2021-01-01", "%Y-%m-%d"):
                     raise ValueError("Transaction Date is out of 1 year window")
 
